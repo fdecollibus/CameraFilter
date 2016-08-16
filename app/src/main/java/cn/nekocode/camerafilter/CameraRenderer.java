@@ -26,6 +26,7 @@ import android.util.SparseArray;
 import android.view.TextureView;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -55,6 +56,8 @@ import cn.nekocode.camerafilter.filter.PolygonizationFilter;
 import cn.nekocode.camerafilter.filter.RefractionFilter;
 import cn.nekocode.camerafilter.filter.TileMosaicFilter;
 import cn.nekocode.camerafilter.filter.TrianglesMosaicFilter;
+
+import static android.hardware.Camera.open;
 
 /**
  * Created by nekocode on 16/8/5.
@@ -114,8 +117,8 @@ public class CameraRenderer extends Thread implements TextureView.SurfaceTexture
 
         // Open camera
         Pair<Camera.CameraInfo, Integer> backCamera = getBackCamera();
-        final int backCameraId = backCamera.second;
-        camera = Camera.open(backCameraId);
+        final AtomicInteger backCameraId = new AtomicInteger(backCamera.second);
+        camera = open(backCameraId.get());
 
         // Start rendering
         start();
